@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import youtube_dl
 from queue import Queue
 from bottle import route, run, Bottle, request, static_file
 from threading import Thread
@@ -21,9 +22,14 @@ def q_size():
 
 @app.route('/q', method='POST')
 def q_put():
-    url = request.forms.get( "url" )
+    url = request.forms.get("url")
+    action = request.forms.get("action")
     if "" != url:
-        dl_q.put( url )
+        if "," in url:
+            for url in url.split(","):
+                dl_q.put({"url" : url, "action" : action})
+        else:
+            dl_q.put({"url" : url, "action" : action})
         print("Added url " + url + " to the download queue")
         return { "success" : True, "url" : url }
     else:
@@ -35,10 +41,31 @@ def dl_worker():
         download(item)
         dl_q.task_done()
 
-def download(url):
+def download(item):
+    url = item["url"]
+    action = item["action"]
     print("Starting download of " + url)
-    command = """youtube-dl -o "/youtube-dl/.incomplete/%(title)s.%(ext)s" -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4] --exec 'touch {} && mv {} /youtube-dl/' --merge-output-format mp4 """ + url
-    subprocess.call(command, shell=True)
+    if action in "bestaudio":
+        print("downloading url as audio")
+        ydl_opts = { "format" : "bestaudio" }
+    elif action in "mp3":
+        print("downloading url as mp3")
+        ydl_opts = { "format" : "bestaudio",
+                     "postprocessors" : [{
+                        "key" : "FFmpegExtractAudio",
+                        "preferredcodec" : "mp3",
+                        "preferredquality" : "192"
+                        }]
+                    }
+    elif action in "video":
+        print("downloading url as video")
+        ydl_opts = { "format" : "bestvideo" }
+        ydl_opts = {}
+    else:
+        ydl_opts = {}
+    ydl = youtube_dl.YoutubeDL(ydl_opts)
+    with ydl:
+        ydl.download([url])
     print("Finished downloading " + url)
 
 dl_q = Queue();
