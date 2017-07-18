@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+import youtube_dl
 from queue import Queue
 from bottle import route, run, Bottle, request, static_file
 from threading import Thread
@@ -37,8 +38,12 @@ def dl_worker():
 
 def download(url):
     print("Starting download of " + url)
-    command = """youtube-dl -o "/youtube-dl/.incomplete/%(title)s.%(ext)s" -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4] --exec 'touch {} && mv {} /youtube-dl/' --merge-output-format mp4 """ + url
-    subprocess.call(command, shell=True)
+    ydl_opts = {}
+    ydl = youtube_dl.YoutubeDL(ydl_opts)
+    with ydl:
+        ydl.download(str(url))
+    #command = """youtube-dl -o "/youtube-dl/.incomplete/%(title)s.%(ext)s" -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4] --exec 'touch {} && mv {} /youtube-dl/' --merge-output-format mp4 """ + url
+    #subprocess.call(command, shell=True)
     print("Finished downloading " + url)
 
 dl_q = Queue();
@@ -48,6 +53,6 @@ dl_thread.start()
 
 print("Started download thread")
 
-app.run(host='0.0.0.0', port=8080, debug=True)
+app.run(host='0.0.0.0', port=1234, debug=True)
 done = True
 dl_thread.join()
