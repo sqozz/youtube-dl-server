@@ -1,6 +1,7 @@
 youtube-dl-server
 =================
 
+Credits go out to [meanbearwiz](https://twitter.com/manbearwiz) who created the project.
 Very spartan and opinionated Web / REST interface for downloading youtube videos onto a server. [`bottle`](https://github.com/bottlepy/bottle) + [`youtube-dl`](https://github.com/rg3/youtube-dl).
 
 ![screenshot][1]
@@ -10,10 +11,8 @@ How to use this image
 
 ###Run on host networking
 
-This example uses host networking for simplicitly. Also note the `-v` argument. This directory will be used to output the resulting videos
-
 ```
-sudo docker run -d --net="host" --name youtube-dl -v /home/kevin/youtube-dl:/youtube-dl kmb32123/youtube-dl-server
+python3 youtube-dl-server.py
 ```
 
 ###Start a download remotely
@@ -22,7 +21,7 @@ Downloads can be triggured by supplying the `{{url}}` of the requested video thr
 
 ####HTML
 
-Just navigate to `http://{{address}}:8080/youtube-dl` and enter the requested `{{url}}`.
+Just navigate to `http://{{address}}:8080/` and enter the requested `{{url}}`.
 
 ####Curl
 
@@ -35,6 +34,4 @@ Implementation
 
 The server uses [`bottle`](https://github.com/bottlepy/bottle) for the web framework and [`youtube-dl`](https://github.com/rg3/youtube-dl) to handle the downloading. For better or worse, the calls to youtube-dl are made through the shell rather then through the python API.
 
-This docker image is based on [`python:3-onbuild`](https://registry.hub.docker.com/_/python/) and consequently [`debian:jessie`](https://registry.hub.docker.com/u/library/debian/).
-
-[1]: https://raw.githubusercontent.com/manbearwiz/youtube-dl-server/master/youtube-dl-server.png
+[1]: https://raw.githubusercontent.com/sqozz/youtube-dl-server/master/youtube-dl-server.png
