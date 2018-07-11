@@ -28,17 +28,25 @@
           <div class="row">
             <form action="/q" method="POST">
             <div class="input-group">
-              <input name="url" type="url" class="form-control" placeholder="URL">
+              <input name="url" type="url" class="url-input" placeholder="URL">
               <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit" name="action" value="mp3" >
-                  <span class="glyphicon glyphicon-headphones" aria-hidden="true"></span> mp3
-                </button>
-                <button class="btn btn-primary" type="submit" name="action" value="bestaudio" >
-                  <span class="glyphicon glyphicon-music" aria-hidden="true"></span> Audio
-                </button>
-                <button class="btn btn-primary" type="submit" name="action" value="video" >
-                  <span class="glyphicon glyphicon-film" aria-hidden="true"></span> Video
-                </button>
+                <div class="dropdown">
+                  <span class="glyphicon glyphicon-music"></span>
+                  <span>Audio</span>
+                  <div class="dropdown-content">
+                    <button class="btn" type="submit" name="action" value="bestaudio" >best</button>
+                    <button class="btn" type="submit" name="action" value="mp3" >mp3</button>
+                    <button class="btn" type="submit" name="action" value="m4a" >m4a</button>
+                    <button class="btn" type="submit" name="action" value="opus" >opus</button>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <span class="glyphicon glyphicon-film" ></span>
+                  <span>Video</span>
+                  <div class="dropdown-content">
+                    <button class="btn" type="submit" name="action" value="video" >best</button>
+                  </div>
+                </div> 
               </span>
             </div>
           </form>
