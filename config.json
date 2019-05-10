@@ -1,0 +1,27 @@
+{
+  "download_dirs" : {
+    "video" : "./downloads/video",
+    "audio" : "./downloads/audio",
+    "bestaudio" : "./downloads/bestaudio"
+  },
+
+  "yt-dl_settings" : {
+    "common": {
+      "simulate" : false
+    },
+    "bestaudio" : {
+      "format" : "bestaudio"
+    },
+    "mp3" : {
+      "format" : "bestaudio",
+      "postprocessors" : [{
+        "key" : "FFmpegExtractAudio",
+        "preferredcodec" : "mp3",
+        "preferredquality" : "192"
+      }]
+    },
+    "video" : {
+      "format" : "bestvideo"
+    }
+  }
+}
